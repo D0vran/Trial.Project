@@ -1,0 +1,202 @@
+﻿@page "/books"
+@using Volo.Abp.Application.Dtos
+@using Trial.Project.Books
+@using Trial.Project.Localization
+@using Microsoft.Extensions.Localization
+@using Project.Permissions
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(ProjectPermissions.Books.Default)]
+@inject IStringLocalizer<ProjectResource> L
+@inherits AbpCrudPageBase<IBookAppService, BookDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateBookDto>
+@inject AbpBlazorMessageLocalizerHelper<ProjectResource> LH
+
+<Card>
+	<CardHeader>
+		<Row Class="justify-content-between">
+			<Column ColumnSize="ColumnSize.IsAuto">
+				<h2>@L["Books"]</h2>
+			</Column>
+            @if(HasCreatePermission)
+            {
+			<Column ColumnSize="ColumnSize.IsAuto">
+				<Button Color = "Color.Primary" 
+					Clicked="OpenCreateModalAsync">@L["NewBook"]</Button>
+			</Column>
+            }
+		</Row>
+	</CardHeader>
+	<CardBody>
+		<DataGrid TItem="BookDto"
+				  Data="Entities"
+				  ReadData="OnDataGridReadAsync"
+				  TotalItems="TotalCount"
+				  ShowPager="true"
+				  PageSize="PageSize">
+				  <DataGridColumns>
+						<DataGridColumn TItem="BookDto"
+									  Field="@nameof(BookDto.Name)"
+									  Caption="@L["Name"]">
+						</DataGridColumn>
+						<DataGridColumn TItem="BookDto"
+										Field="@nameof(BookDto.Type)"
+										Caption="@L["Type"]">
+						</DataGridColumn>
+						<DataGridColumn TItem="BookDto"
+									    Field="@nameof(BookDto.PublishDate)"
+									    Caption="@L["PublishDate"]">
+									<DisplayTemplate>
+										@context.PublishDate.ToString("yyyy")
+									</DisplayTemplate>
+						</DataGridColumn>
+						<DataGridColumn TItem="BookDto"
+										Field="@nameof(BookDto.Price)"
+										Caption="@L["Price"]">
+						</DataGridColumn>
+						<DataGridColumn TItem="BookDto"
+										Field="@nameof(BookDto.CreationTime)"
+										Caption="@L["CreationTime"]">
+									<DisplayTemplate>
+										@context.CreationTime.ToShortDateString()
+									</DisplayTemplate>
+						</DataGridColumn>
+                        <DataGridColumn>
+
+                        </DataGridColumn>
+
+                        <DataGridEntityActionsColumn TItem="BookDto" @ref="@EntityActionsColumn">
+                            <DisplayTemplate>
+                                <EntityActions TItem="BookDto" EntityActionsColumn="@EntityActionsColumn">
+                                    <EntityAction TItem="BookDto"
+                                                  Text="@L["Edit"]"
+                                                  Visible=HasUpdatePermission
+                                                  Clicked="() => OpenEditModalAsync(context)" />
+
+                                    <EntityAction TItem="BookDto"
+                                                  Text="@L["Delete"]"
+                                                  Visible=HasDeletePermission
+                                                  Clicked="() => DeleteEntityAsync(context)" />
+                                </EntityActions>
+                            </DisplayTemplate>
+                        </DataGridEntityActionsColumn>
+
+				  </DataGridColumns>
+		</DataGrid>
+	</CardBody>
+</Card>
+<Modal @ref="@CreateModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@L["NewBook"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@NewEntity.Name">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["Type"]</FieldLabel>
+                        <Select TValue="BookType" @bind-SelectedValue="@NewEntity.Type">
+                            @foreach (int bookTypeValue in Enum.GetValues(typeof(BookType)))
+                            {
+                                <SelectItem TValue="BookType" Value="@((BookType) bookTypeValue)">
+                                    @L[$"Enum:BookType.{bookTypeValue}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    <Field>
+                        <FieldLabel>@L["PublishDate"]</FieldLabel>
+                        <DateEdit TValue="DateTime" @bind-Date="NewEntity.PublishDate"/>
+                    </Field>
+                    <Field>
+                        <FieldLabel>@L["Price"]</FieldLabel>
+                        <NumericEdit TValue="float" @bind-Value="NewEntity.Price"/>
+                    </Field>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                Clicked="CloseCreateModalAsync">@L["Cancel"]</Button>
+                <Button Color="Color.Primary"
+                Type="@ButtonType.Submit"
+                PreventDefaultOnSubmit="true"
+                Clicked="CreateEntityAsync">@L["Save"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+<Modal @ref="@EditModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@EditingEntity.Name</ModalTitle>
+                <CloseButton Clicked="CloseEditModalAsync"/>
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="@EditingEntity.Name">
+                                <Feedback>
+                                    <ValidationError/>
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["Type"]</FieldLabel>
+                        <Select TValue="BookType" @bind-SelectedValue="@EditingEntity.Type">
+                            @foreach (int bookTypeValue in Enum.GetValues(typeof(BookType)))
+                            {
+                                <SelectItem TValue="BookType" Value="@((BookType) bookTypeValue)">
+                                    @L[$"Enum:BookType.{bookTypeValue}"]
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+                    <Field>
+                        <FieldLabel>@L["PublishDate"]</FieldLabel>
+                        <DateEdit TValue="DateTime" @bind-Date="EditingEntity.PublishDate"/>
+                    </Field>
+                    <Field>
+                        <FieldLabel>@L["Price"]</FieldLabel>
+                        <NumericEdit TValue="float" @bind-Value="EditingEntity.Price"/>
+                    </Field>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                Clicked="CloseEditModalAsync">@L["Cancel"]</Button>
+                <Button Color="Color.Primary"
+                Type="@ButtonType.Submit"
+                PreventDefaultOnSubmit="true"
+                Clicked="UpdateEntityAsync">@L["Save"]</Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
+
+
+@code 
+{
+    public Book()
+    {
+        CreatePolicyName = ProjectPermissions.Books.Create;
+        UpdatePolicyName = ProjectPermissions.Books.Edit;
+        DeletePolicyName = ProjectPermissions.Books.Delete;
+    }
+}

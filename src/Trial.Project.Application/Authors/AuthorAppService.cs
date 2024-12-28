@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
+
+namespace Trial.Project.Authors
+{
+    public class AuthorAppService
+        : CrudAppService<
+            Author,
+            AuthorDto,
+            Guid,
+            PagedAndSortedAuthorDto,
+            CreateUpdateAuthorDto>,
+            IAuthorAppService
+    {
+        public AuthorAppService(IAuthorRepository repository)
+            : base(repository)
+        { 
+        }
+
+    }
+}

@@ -1,0 +1,30 @@
+{
+  "culture": "en-GB",
+    "texts": {
+        "AppName": "Project",
+        "Menu:Home": "Home",
+        "Welcome": "Welcome",
+        "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+        "Menu.BookStore": "Book Store",
+        "Menu.Books": "Books",
+        "Actions": "Actions",
+        "Close": "Close",
+        "Delete": "Delete",
+        "Edit": "Edit",
+        "PublishDate": "Publish date",
+        "NewBook": "New book",
+        "Name": "Name",
+        "Type": "Type",
+        "Price": "Price",
+        "CreationTime": "Creation time",
+        "AreYouSure": "Are you sure?",
+        "AreYouSureToDelete": "Are you sure you want to delete this item?",
+        "Enum:BookType.0": "Undefined",
+        "Enum:BookType.1": "Fantasy",
+        "Enum:BookType.2": "Adventure",
+        "Enum:BookType.3": "Roman",
+        "Enum:BookType.4": "Science",
+        "Enum:BookType.5": "Horror",
+        "Enum:BookType.6": "History"
+    }
+}
