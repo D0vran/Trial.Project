@@ -91,7 +91,8 @@ public class ProjectDbContext :
         {
             b.ToTable(ProjectConsts.DbTablePrefix + "Books", ProjectConsts.DbSchema);
             b.ConfigureByConvention();
-            b.Property(b => b.Name).IsRequired();
+            b.Property(b => b.Name).IsRequired().HasMaxLength(128);
+            b.HasOne<Author>().WithMany().HasForeignKey(x => x.AuthorId).IsRequired();
         });
 
         builder.Entity<Author>(a =>

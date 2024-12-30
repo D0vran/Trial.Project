@@ -13,7 +13,7 @@ namespace Trial.Project.Authors
         [Required]
         public string Name { get; set; }
         [Required]
-        public DateTime BithDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public string ShortBio {  get; set; }
     }
 }

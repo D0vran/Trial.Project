@@ -63,15 +63,13 @@ public class ProjectMenuContributor : IMenuContributor
                 url: "/books"
                 ));
         }
-        //if (await context.IsGrantedAsync(ProjectPermissions.Authors.Default))
-        //{
+
         bookStoreMenu.AddItem(
             new ApplicationMenuItem(
                 "BookStore.Authors",
                 l["Menu:Authors"],
                 url: "/authors"
                 ));
-        //}
 
         var administration = context.Menu.GetAdministration();
 

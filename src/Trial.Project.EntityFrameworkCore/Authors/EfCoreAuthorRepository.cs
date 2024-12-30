@@ -32,7 +32,7 @@ namespace Trial.Project.Authors
         public async Task<List<Author>> GetListAsync(int skipCount, 
                                                     int maxResultCount, 
                                                     string sorting, 
-                                                    string filter = null)
+                                                    string? filter = null)
         {
             var dbSet = await GetDbSetAsync();
             return await dbSet
