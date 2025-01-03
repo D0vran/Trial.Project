@@ -3,11 +3,8 @@
 @using Trial.Project.Books
 @using Trial.Project.Localization
 @using Microsoft.Extensions.Localization
-@using Project.Permissions
-@using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(ProjectPermissions.Books.Default)]
+@using Volo.Abp.AspNetCore.Components.Web
 @inject IStringLocalizer<ProjectResource> L
-@inherits AbpCrudPageBase<IBookAppService, BookDto, Guid, PagedAndSortedResultRequestDto, CreateUpdateBookDto>
 @inject AbpBlazorMessageLocalizerHelper<ProjectResource> LH
 
 <Card>
